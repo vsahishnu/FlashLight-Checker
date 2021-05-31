@@ -1,0 +1,43 @@
+package com.sagitest.flashlightchecker
+
+import android.content.Context
+import android.hardware.camera2.CameraManager
+import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import kotlinx.android.synthetic.main.activity_main.*
+
+//for reference, check: https://www.youtube.com/watch?v=hX3ZYm3aZgE
+//Camera permession is not needed for flash light
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var cameraM :CameraManager
+    var isFlash = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        cameraM = getSystemService(Context.CAMERA_SERVICE) as CameraManager
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun OnOff(view: View) {
+        if(!isFlash) {
+            val camereListId = cameraM.cameraIdList[0]
+            cameraM.setTorchMode(camereListId, true)
+            isFlash = true
+            btn_power.setImageResource(R.drawable.ic_power_on)
+            Toast.makeText(this@MainActivity, "Flash Light is On", Toast.LENGTH_SHORT).show()
+        }else {
+            val camereListId = cameraM.cameraIdList[0]
+            cameraM.setTorchMode(camereListId, false)
+            isFlash = false
+            btn_power.setImageResource(R.drawable.ic_power_off)
+            Toast.makeText(this@MainActivity, "Flash Light is Off", Toast.LENGTH_SHORT).show()
+        }
+    }
+}
